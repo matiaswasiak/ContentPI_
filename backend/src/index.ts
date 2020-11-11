@@ -1,5 +1,5 @@
 // Dependencies
-import { ApolloServer, makeExecutableSchema, makeRemoteExecutableSchema } from 'apollo-server'
+import { ApolloServer, makeExecutableSchema } from 'apollo-server'
 
 // Models
 import models from './models'
@@ -27,7 +27,7 @@ const resolvers = {
 }
 
 // Schema
-const schema = makeRemoteExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 })

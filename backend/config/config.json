@@ -7,8 +7,8 @@
     "port": 5432,
     "host": "localhost",
     "database": "ContentPI",
-    "username": "cms",
-    "password": "12345678"
+    "username": "postgres",
+    "password": "Dung3on01"
   },
   "security": {
     "secretKey": "C0nT3ntP1",
