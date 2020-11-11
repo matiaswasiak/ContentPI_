@@ -6,7 +6,7 @@
     "dialect": "postgres",
     "port": 5432,
     "host": "localhost",
-    "database": "contentpi",
+    "database": "ContentPI",
     "username": "cms",
     "password": "12345678"
   },
