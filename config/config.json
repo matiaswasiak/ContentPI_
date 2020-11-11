@@ -12,6 +12,6 @@
   },
   "security": {
     "secretKey": "C0nT3ntP1",
-    "expriesIn": "7d"
+    "expiresIn": "7d"
   }
 }
