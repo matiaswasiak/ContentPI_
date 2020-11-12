@@ -6,7 +6,7 @@ type User {
   privilege: String!
   active: Boolean!
   createdAt: Datetime!
-  updatedAt: Datatime!
+  updatedAt: Datetime!
 }
 
 type Query {

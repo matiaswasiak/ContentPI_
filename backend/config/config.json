@@ -8,7 +8,7 @@
     "host": "localhost",
     "database": "ContentPI",
     "username": "postgres",
-    "password": "Dung3on01"
+    "password": "12345678"
   },
   "security": {
     "secretKey": "C0nT3ntP1",

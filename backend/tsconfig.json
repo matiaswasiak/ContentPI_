@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "backend/config/src",
+    "baseUrl": "./src",
     "esModuleInterop": true,
     "module": "commonjs",
     "noImplicitAny": true,
@@ -8,7 +8,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "target": "es6",
-    "typeRoots": ["backend/config/src/@types", "./node_modules/@types"]
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
