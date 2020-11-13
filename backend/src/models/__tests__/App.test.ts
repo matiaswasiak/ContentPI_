@@ -18,7 +18,7 @@ describe('#App', () => {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
-        _defaultValue: DataTypes.UUIDV4()
+        defaultValue: DataTypes.UUIDV4()
       },
       appName: {
         type: DataTypes.STRING,

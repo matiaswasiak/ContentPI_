@@ -8,7 +8,7 @@
     "start": "ts-node dist/index.js",
     "build": "tsc -p .",
     "lint": "eslint . --ext .js,.tsx,.ts",
-    "text": "jest src"
+    "test": "jest src"
   },
   "jest": {
     "transform": {

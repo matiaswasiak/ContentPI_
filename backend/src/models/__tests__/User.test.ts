@@ -30,7 +30,7 @@ describe('#User', () => {
             args: true,
             msg: 'The user just accepts alphanumeric characters'
           },
-          lent: {
+          len: {
             args: [4, 20],
             msg: 'The username must be from 4 to 20 characters'
           }
@@ -53,6 +53,11 @@ describe('#User', () => {
       },
       privilege: {
         type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user'
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
       }
