@@ -44,3 +44,5 @@ const Cards: FC<iProps> = ({ items }): ReactElement => {
     </>
   )
 }
+
+export default memo(Cards)

@@ -1,6 +1,6 @@
 type User {
   id: UUID!
-  usename: String!
+  username: String!
   password: String!
   email: String!
   privilege: String!
