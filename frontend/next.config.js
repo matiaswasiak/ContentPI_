@@ -23,6 +23,10 @@ export default withSass({
       './src/shared/components/layouts'
     )
     config.resolve.alias['@lib'] = path.resolve(dir, './src/shared/lib')
+    config.resolve.alias['@modals'] = path.resolve(
+      dir,
+      './src/app/dashboard/components/Modals'
+    )
     config.resolve.alias['@pages'] = path.resolve(dir, './src/pages')
     config.resolve.alias['@shared'] = path.resolve(dir, './src/shared')
     config.resolve.alias.styles = path.resolve(dir, './src/shared/styles')
