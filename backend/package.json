@@ -10,6 +10,11 @@
     "lint": "eslint . --ext .js,.tsx,.ts",
     "test": "jest src"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
   "jest": {
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
@@ -21,25 +26,28 @@
     "@types/express": "4.17.9",
     "@types/jest": "^26.0.15",
     "@types/jsonwebtoken": "8.5.0",
-    "@types/node": "14.14.7",
+    "@types/node": "14.14.9",
     "@types/sequelize": "4.28.9",
     "@typescript-eslint/eslint-plugin": "4.8.1",
     "@typescript-eslint/parser": "4.8.1",
-    "eslint": "7.13.0",
+    "eslint": "7.14.0",
+    "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "6.15.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "^7.21.5",
+    "husky": "^4.3.0",
     "jest": "^26.6.3",
-    "prettier": "2.1.2",
+    "prettier": "2.2.0",
     "sequelize-mock": "0.10.2",
     "ts-jest": "^26.4.4",
     "ts-node-dev": "^1.0.0",
     "tslint": "6.1.2",
-    "typescript": "4.0.5"
+    "typescript": "4.1.2"
   },
   "dependencies": {
-    "@graphql-tools/load-files": "^6.2.4",
+    "@graphql-tools/load-files": "^6.2.5",
     "@graphql-tools/merge": "^6.2.5",
     "apollo-server": "^2.19.0",
     "express": "4.17.1",
