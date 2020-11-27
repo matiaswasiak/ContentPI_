@@ -11,17 +11,15 @@ import FormProvider from '@contexts/form'
 
 // Components
 import MyApps from '@app/dashboard/components/MyApps'
-
 const Page = (): ReactElement => {
   const { data: dataGetApps, loading } = useQuery(GET_APPS_QUERY)
-
   if (loading) {
     return <div />
   }
 
   // Router
   const router = {
-    appId: dataGetApps.getApps.lenght > 0 ? dataGetApps.getApps[0].id : null,
+    appId: dataGetApps.getApps.length > 0 ? dataGetApps.getApps[0].id : null,
     stage: 'master'
   }
 
@@ -33,5 +31,4 @@ const Page = (): ReactElement => {
     </UserProvider>
   )
 }
-
 export default Page
