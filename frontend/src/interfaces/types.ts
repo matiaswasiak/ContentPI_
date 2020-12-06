@@ -1,5 +1,3 @@
-import { StringDecoder } from 'string_decoder'
-
 export type App = {
   appName: string
   identifier: string

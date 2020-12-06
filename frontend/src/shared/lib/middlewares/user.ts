@@ -1,5 +1,4 @@
 // Lib
-import { redirectTo } from 'fogg-utils'
 import { getUserData } from '../jwt'
 
 export const isConnected = (

@@ -11,6 +11,7 @@ import FormProvider from '@contexts/form'
 
 // Components
 import MyApps from '@app/dashboard/components/MyApps'
+
 const Page = (): ReactElement => {
   const { data: dataGetApps, loading } = useQuery(GET_APPS_QUERY)
   if (loading) {

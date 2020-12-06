@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-newline */
 // Dependencies
 import React, { FC, ReactElement, useContext, useState, memo } from 'react'
 import { Modal, Badge, Input, PrimaryButton, LinkButton, Toggle } from 'fogg-ui'
