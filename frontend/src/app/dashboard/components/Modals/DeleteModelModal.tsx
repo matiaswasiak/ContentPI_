@@ -17,7 +17,7 @@ interface iProps {
   onClose(): void
 }
 
-const DeleteFieldModal: FC<iProps> = ({
+const DeleteModelModal: FC<iProps> = ({
   isOpen,
   label,
   onClose,
@@ -65,4 +65,4 @@ const DeleteFieldModal: FC<iProps> = ({
   )
 }
 
-export default memo(DeleteFieldModal)
+export default memo(DeleteModelModal)
