@@ -103,7 +103,9 @@ const Sidebar: FC<iProps> = ({ router }): ReactElement => {
           {sidebar === 'model' && (
             <ModelSidebar app={getAppById} router={router} />
           )}
-          {sidebar === 'content' && <ContentSidebar />}
+          {sidebar === 'content' && (
+            <ContentSidebar app={getAppById} router={router} />
+          )}
         </div>
       </section>
     </aside>
