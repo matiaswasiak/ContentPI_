@@ -15,6 +15,7 @@ type Field {
   createdAt: Datetime!
   updateAt: Datetime!
   modelId: UUID!
+  values: [Value!]
 }
 
 type Mutation {
