@@ -1,5 +1,13 @@
+// Dependencies
+import { Op } from 'sequelize'
+
 // Interface
-import { iValue, iCreateOrUpdateValueInput, iModels } from '../../interfaces'
+import {
+  iValue,
+  iCreateOrUpdateValueInput,
+  iValueInput,
+  iModels
+} from '../../interfaces'
 
 export default {
   Mutation: {
@@ -12,5 +20,18 @@ export default {
 
       return insertedValues
     }
+  },
+  findUniqueValues: async (
+    _: any,
+    { input }: { input: iValueInput[] },
+    { models }: { models: iModels }
+  ): Promise<any> => {
+    const data = await models.Value.findAll({
+      where: {
+        [Op.or]: input
+      }
+    })
+
+    return data
   }
 }
