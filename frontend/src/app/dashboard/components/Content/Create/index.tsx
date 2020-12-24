@@ -68,6 +68,7 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
   const [required, setRequired] = useState(requiredValues)
   const [saveLoading, setSaveLoading] = useState(false)
   const [publishLoading, setPublishLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Mutations
   const [createValuesMutation] = useMutation(CREATE_VALUES_MUTATION)
@@ -75,6 +76,11 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
 
   // Contexts
   const { onChange, setValue } = useContext(FormContext)
+
+  // Methods
+  const handleAfterCreateOrEditEntryModal = (): void =>
+    setIsModalOpen(!isModalOpen)
+
   // Methods
   const handleActive = (field: string) => {
     setActive(field)
@@ -169,6 +175,7 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
 
             waitFor(2).then(() => {
               setShowAlert(false)
+              handleAfterCreateOrEditEntryModal()
             })
           }
         }
@@ -209,6 +216,7 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
           systemFields={systemFields}
           systemValues={systemValues}
           values={values}
+          isModalOpen={isModalOpen}
         />
       </>
     </MainLayout>
