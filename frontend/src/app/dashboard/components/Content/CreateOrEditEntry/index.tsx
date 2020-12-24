@@ -14,6 +14,7 @@ import { FormContext } from '@contexts/form'
 // Mutation
 import CREATE_VALUES_MUTATION from '@graphql/values/createValues.mutation'
 import FIND_UNIQUE_VALUES_MUTATION from '@graphql/values/findUniqueValues.mutation'
+import UPDATE_VALUES_MUTATION from '@graphql/values/updateValues.mutation'
 
 // Components
 import CustomFields from '../CustomFields'
@@ -23,11 +24,14 @@ interface iProps {
   router: any
   data: any
 }
-const Create: FC<iProps> = ({ data, router }): ReactElement => {
+const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
   // Data
-  const { getModel } = data
+  const { getModel, entryId = null, getValuesByEntry = null } = data
+  const isEditing = entryId && getValuesByEntry
+
   // Setting a unique ID
   const newId = uuidv4()
+
   // Fields
   const initialValues: any = {}
   const systemInitialValues: any = {}
@@ -38,9 +42,20 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
     (field: any) => field.isUnique && !field.isSystem
   )
 
+  const getValue = (fieldId: string) => {
+    return isEditing && getValuesByEntry
+      ? getValuesByEntry.find(
+          (valueEntry: any) => valueEntry.fieldId === fieldId
+        )
+      : { value: '' }
+  }
+
   // Custom fields
   customFields.forEach((field: any) => {
-    initialValues[field.identifier] = ''
+    const val = getValue(field.id)
+
+    initialValues[field.identifier] = val.value
+
     if (field.isRequired) {
       requiredValues[field.identifier] = false
     }
@@ -48,16 +63,18 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
   // System fields
   systemFields.forEach((field: any) => {
     let value = field.defaultValue
+    const val = getValue(field.id)
+
     if (field.identifier === 'createdAt') {
       value = moment().format('MM/DD/YYYY hh:mm a')
     }
     if (field.identifier === 'updatedAt') {
       value = ''
     }
-    if (field.identifier !== 'id') {
-      systemInitialValues[field.identifier] = value
-    }
+
+    systemInitialValues[field.identifier] = val.value || value
   })
+
   // States
   const [active, setActive] = useState('')
   const [alert, setAlert] = useState('')
@@ -73,6 +90,7 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
   // Mutations
   const [createValuesMutation] = useMutation(CREATE_VALUES_MUTATION)
   const [findUniqueValuesMutation] = useMutation(FIND_UNIQUE_VALUES_MUTATION)
+  const [updateValuesMutation] = useMutation(UPDATE_VALUES_MUTATION)
 
   // Contexts
   const { onChange, setValue } = useContext(FormContext)
@@ -127,7 +145,7 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
           setPublishLoading(false)
         }
 
-        if (dataFindUniqueValues.findUniqueValues.length > 0) {
+        if (!isEditing && dataFindUniqueValues.findUniqueValues.length > 0) {
           setAlert('This entry already exists')
           setAlertType('danger')
           setShowAlert(true)
@@ -137,9 +155,11 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
           })
         } else {
           // Setting up System Field values
-          values.id = newId
+          values.id = systemValues.id || newId
           values.status = action === 'save' ? 'Draft' : 'Published'
-          values.createdAt = moment().format()
+          values.createdAt = isEditing
+            ? systemValues.createdAt
+            : moment().format()
           values.updatedAt = moment().format()
 
           Object.keys(values).forEach((fieldIdentifier: string) => {
@@ -150,17 +170,34 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
             entryValues.push({
               entry: newId,
               fieldId: valueField.id,
-              value: values[fieldIdentifier]
+              value: values[fieldIdentifier],
+              fieldIdentifier
             })
           })
 
-          const { data: dataCreateValues } = await createValuesMutation({
-            variables: {
-              values: entryValues
-            }
-          })
+          let dataUpdateValues: any = null
+          let dataCreateValues: any = null
 
-          if (dataCreateValues) {
+          if (isEditing) {
+            const response = await updateValuesMutation({
+              variables: {
+                entry: entryId,
+                values: entryValues
+              }
+            })
+
+            dataUpdateValues = response.data
+          } else {
+            const response = await createValuesMutation({
+              variables: {
+                values: entryValues
+              }
+            })
+
+            dataCreateValues = response.data
+          }
+
+          if (dataCreateValues || dataUpdateValues) {
             const message = action === 'save' ? 'Saved' : 'Published'
 
             setAlert(message)
@@ -182,9 +219,16 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
       })
     }
   }
+
+  let title = 'Create new Entry'
+
+  if (isEditing) {
+    title = `Edit ${values.title || 'Entry'}`
+  }
+
   return (
     <MainLayout
-      title="Create new Entry"
+      title={title}
       header
       content
       footer
@@ -194,7 +238,7 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
     >
       <>
         <CustomFields
-          action="create"
+          action={isEditing ? 'edit' : 'create'}
           active={active}
           customFields={customFields}
           getModel={getModel}
@@ -222,4 +266,4 @@ const Create: FC<iProps> = ({ data, router }): ReactElement => {
     </MainLayout>
   )
 }
-export default memo(Create)
+export default memo(CreateOrEditEntry)

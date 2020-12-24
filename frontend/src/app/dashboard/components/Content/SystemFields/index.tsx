@@ -42,7 +42,7 @@ const SystemFields: FC<iProps> = ({
   isModalOpen,
   router
 }): ReactElement => {
-  const editUrl = `${EDIT_ENTRY_LINK(router).as}/${systemValues.id}`
+  const editUrl = `${EDIT_ENTRY_LINK(router).as}?entryId=${systemValues.id}`
   const handleEditNewEntry = (): void => redirectTo(editUrl)
   const handleCreateNewEntry = (): void =>
     redirectTo(CREATE_ENTRY_LINK(router).as)
