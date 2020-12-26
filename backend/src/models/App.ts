@@ -1,6 +1,5 @@
 // Interface
 import { iApp, iModels, iDataTypes } from '../interfaces'
-
 export default (sequelize: any, DataTypes: iDataTypes): iApp => {
   const App = sequelize.define('App', {
     id: {
@@ -28,7 +27,6 @@ export default (sequelize: any, DataTypes: iDataTypes): iApp => {
       allowNull: true
     }
   })
-
   App.associate = (models: iModels): void => {
     App.hasMany(models.Model, {
       foreignKey: {
@@ -38,6 +36,16 @@ export default (sequelize: any, DataTypes: iDataTypes): iApp => {
       as: 'models',
       onDelete: 'CASCADE'
     })
+
+    App.hasMany(models.Enumeration, {
+      foreignKey: {
+        name: 'appId',
+        field: 'app_id'
+      },
+      as: 'enumerations',
+      onDelete: 'CASCADE'
+    })
+  }
   }
 
   return App
