@@ -1,5 +1,6 @@
 // Interface
 import { iApp, iModels, iDataTypes } from '../interfaces'
+
 export default (sequelize: any, DataTypes: iDataTypes): iApp => {
   const App = sequelize.define('App', {
     id: {
@@ -45,7 +46,6 @@ export default (sequelize: any, DataTypes: iDataTypes): iApp => {
       as: 'enumerations',
       onDelete: 'CASCADE'
     })
-  }
   }
 
   return App

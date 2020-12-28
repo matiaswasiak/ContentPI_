@@ -62,7 +62,7 @@ export default {
                 fieldId: item.fieldId
               }
             }).then((valueToEdit: any) => {
-              if (valueToEdit) {
+              if (valueToEdit[0]) {
                 valueToEdit[0]
                   .update(
                     { ...item },
@@ -76,6 +76,11 @@ export default {
                     }
                   )
                   .then((updatedValue: any) => resolve(updatedValue))
+              } else if (item.entry && item.fieldId) {
+                // Creating values that did not exists before...
+                models.Value.create(item).then((createdValue: any) =>
+                  resolve(createdValue)
+                )
               }
             })
           })

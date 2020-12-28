@@ -26,7 +26,12 @@ interface iProps {
 }
 const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
   // Data
-  const { getModel, entryId = null, getValuesByEntry = null } = data
+  const {
+    getModel,
+    entryId = null,
+    getValuesByEntry = null,
+    getEnumerationsByAppId
+  } = data
   const isEditing = entryId && getValuesByEntry
 
   // Setting a unique ID
@@ -41,13 +46,17 @@ const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
   const uniqueFields = getModel.fields.filter(
     (field: any) => field.isUnique && !field.isSystem
   )
+  const enumerations: any = []
 
   const getValue = (fieldId: string) => {
-    return isEditing && getValuesByEntry
-      ? getValuesByEntry.find(
-          (valueEntry: any) => valueEntry.fieldId === fieldId
-        )
-      : { value: '' }
+    if (isEditing && getValuesByEntry) {
+      const value = getValuesByEntry.find(
+        (valueEntry: any) => valueEntry.fieldId === fieldId
+      )
+      return value || { value: '' }
+    }
+
+    return { value: '' }
   }
 
   // Custom fields
@@ -55,6 +64,14 @@ const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
     const val = getValue(field.id)
 
     initialValues[field.identifier] = val.value
+
+    if (field.type === 'Dropdown') {
+      const enumerationId = field.defaultValue
+      const enumeration = getEnumerationsByAppId.find(
+        (e: any) => e.id === enumerationId
+      )
+      enumerations.push(enumeration)
+    }
 
     if (field.isRequired) {
       requiredValues[field.identifier] = false
@@ -248,6 +265,7 @@ const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
           router={router}
           values={values}
           setValues={setValues}
+          enumerations={enumerations}
         />
         <SystemFields
           alert={alert}
