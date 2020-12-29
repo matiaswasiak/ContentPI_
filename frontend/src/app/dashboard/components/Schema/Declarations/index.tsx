@@ -25,6 +25,10 @@ const Declarations: FC<iProps> = ({
   // Method to open modal
   const handleModal = (): void => setIsOpen(!isOpen)
 
+  if (model.identifier === 'asset') {
+    return <div />
+  }
+
   return (
     <>
       {fieldType && (

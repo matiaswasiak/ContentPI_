@@ -1,9 +1,12 @@
 // Dependencies
 import React, { FC, ReactElement, useState, useContext, memo } from 'react'
-import { slugFn, getEmptyValues, waitFor } from 'fogg-utils'
+import { slugFn, getEmptyValues, waitFor, uploadFile } from 'fogg-utils'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment'
 import { useMutation } from '@apollo/client'
+
+// Configuration
+import config from '@config'
 
 // Shared components
 import MainLayout from '@layouts/main/MainLayout'
@@ -132,9 +135,13 @@ const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
     onChange(e, setValues)
   }
 
-  const handleSubmit = async (action: string): Promise<void> => {
+  const handleSubmit = async (
+    action: string,
+    isFile: boolean
+  ): Promise<void> => {
     const emptyValues = getEmptyValues(values, Object.keys(requiredValues))
     const entryValues: any[] = []
+    let isUploaded = false
 
     if (emptyValues) {
       setRequired(emptyValues)
@@ -179,6 +186,15 @@ const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
             : moment().format()
           values.updatedAt = moment().format()
 
+          if (isFile) {
+            const [, , , fileUrl] = values.fileUrl.split('/')
+            isUploaded = await uploadFile(
+              values.file,
+              `${config.baseUrl}/upload/${fileUrl}`
+            )
+            values.file = values.fileName
+          }
+
           Object.keys(values).forEach((fieldIdentifier: string) => {
             const valueField = getModel.fields.find(
               (field: any) => field.identifier === fieldIdentifier
@@ -217,7 +233,7 @@ const CreateOrEditEntry: FC<iProps> = ({ data, router }): ReactElement => {
           if (dataCreateValues || dataUpdateValues) {
             const message = action === 'save' ? 'Saved' : 'Published'
 
-            setAlert(message)
+            setAlert(isFile && isUploaded ? 'Uploaded' : message)
             setShowAlert(true)
             setAlertType('success')
             setSystemValues({
