@@ -100,6 +100,7 @@ export interface iModels {
   Enumeration: any
   Field: any
   Model: any
+  Reference: any
   User: any
   Value: any
   sequelize: any

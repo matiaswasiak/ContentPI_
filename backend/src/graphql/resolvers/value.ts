@@ -1,5 +1,7 @@
 // Dependencies
 import { Op } from 'sequelize'
+import { getEntries } from 'fogg-utils'
+
 // Interfaces
 import {
   iValue,
@@ -22,6 +24,54 @@ export default {
       })
 
       return values
+    },
+    getEntriesByModelId: async (
+      _: any,
+      { modelId }: { modelId: string },
+      { models }: { models: iModels }
+    ): Promise<any> => {
+      const allEntriesPromises: any[] = []
+
+      const references = await models.Reference.findAll({
+        where: {
+          parentModel: modelId
+        }
+      })
+
+      if (references.length > 0) {
+        references.forEach((reference: any) => {
+          const promise = new Promise((resolve: any) => {
+            models.Field.findAll({
+              where: {
+                model_id: reference.targetModel
+              },
+              include: [
+                {
+                  model: models.Value,
+                  as: 'values'
+                }
+              ]
+            }).then((fields: any) => {
+              const [{ modelName }] = fields
+              const { entries } = getEntries(fields)
+
+              resolve({
+                modelId: reference.targetModel,
+                modelName,
+                entries
+              })
+            })
+          })
+
+          allEntriesPromises.push(promise)
+        })
+      }
+
+      const entries = await Promise.all(allEntriesPromises)
+
+      return {
+        entries: JSON.stringify(entries)
+      }
     }
   },
   Mutation: {
@@ -43,7 +93,6 @@ export default {
           [Op.or]: input
         }
       })
-
       return data
     },
     updateValues: async (
@@ -52,7 +101,6 @@ export default {
       { models }: { models: iModels }
     ): Promise<any> => {
       const updatedValuesPromises: any = []
-
       if (input) {
         input.forEach((item: any) => {
           const updateValuePromise = new Promise((resolve: any) => {
@@ -84,13 +132,10 @@ export default {
               }
             })
           })
-
           updatedValuesPromises.push(updateValuePromise)
         })
       }
-
       const newValues = await Promise.all(updatedValuesPromises)
-
       return newValues
     }
   }
