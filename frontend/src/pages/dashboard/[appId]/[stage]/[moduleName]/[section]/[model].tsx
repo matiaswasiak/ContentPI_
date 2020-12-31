@@ -19,11 +19,14 @@ import GET_MODEL_QUERY from '@graphql/models/getModel.query'
 import GET_DECLARATIONS_QUERY from '@graphql/declarations/getDeclarations.query'
 import GET_VALUES_BY_ENTRY_QUERY from '@graphql/values/getValuesByEntry.query'
 import GET_ENUMERATIONS_BY_APP_ID_QUERY from '@graphql/enumerations/getEnumerationsByAppId.query'
+import GET_ENTRIES_BY_MODEL_ID_QUERY from '@graphql/values/getEntriesByModelId.query'
 
 const Page: FC = (): ReactElement => {
   // Router
   const router = useRouter()
   const { appId, section, moduleName, model, entryId } = router.query
+  let modelId = null
+  let entries: any = []
 
   // Executing Queries
   const { data: getModelQueryData } = useQuery(GET_MODEL_QUERY, {
@@ -36,14 +39,17 @@ const Page: FC = (): ReactElement => {
 
   const { data: getDeclarationsQueryData } = useQuery(GET_DECLARATIONS_QUERY)
 
-  const { data: dataValues } = useQuery(GET_VALUES_BY_ENTRY_QUERY, {
-    variables: {
-      entry: entryId
-    },
-    skip: !entryId
-  })
+  const { data: getValuesByEntryQueryData } = useQuery(
+    GET_VALUES_BY_ENTRY_QUERY,
+    {
+      variables: {
+        entry: entryId
+      },
+      skip: !entryId
+    }
+  )
 
-  const { data: dataEnumerationsByAppId } = useQuery(
+  const { data: getEnumerationsByAppIdQueryData } = useQuery(
     GET_ENUMERATIONS_BY_APP_ID_QUERY,
     {
       variables: {
@@ -53,8 +59,22 @@ const Page: FC = (): ReactElement => {
     }
   )
 
+  if (getModelQueryData) {
+    modelId = getModelQueryData.getModel.id
+  }
+
+  const { data: getEntriesByModelIdQueryData } = useQuery(
+    GET_ENTRIES_BY_MODEL_ID_QUERY,
+    {
+      variables: {
+        modelId
+      },
+      skip: !modelId
+    }
+  )
+
   // Blocking render if dataValues is not ready
-  if (entryId && !dataValues) {
+  if (entryId && !getValuesByEntryQueryData) {
     return <div />
   }
 
@@ -62,8 +82,14 @@ const Page: FC = (): ReactElement => {
     return <div />
   }
 
-  if (!dataEnumerationsByAppId) {
+  if (!getEnumerationsByAppIdQueryData) {
     return <div />
+  }
+
+  if (getEntriesByModelIdQueryData) {
+    entries = JSON.parse(
+      getEntriesByModelIdQueryData.getEntriesByModelId.entries
+    )
   }
 
   // Pages components
@@ -73,7 +99,6 @@ const Page: FC = (): ReactElement => {
     edit: CreateOrEditEntry,
     schema: Schema
   }
-
   const renderPage = (page: any) => {
     if (Pages[page]) {
       return createElement(Pages[page], {
@@ -81,16 +106,16 @@ const Page: FC = (): ReactElement => {
         data: {
           entryId,
           section,
+          entries,
           ...getModelQueryData,
           ...getDeclarationsQueryData,
-          ...dataValues,
-          ...dataEnumerationsByAppId
+          ...getValuesByEntryQueryData,
+          ...getEnumerationsByAppIdQueryData
         }
       })
     }
     return <PageNotFound />
   }
-
   return (
     <UserProvider>
       <AppProvider id={appId}>
@@ -99,5 +124,4 @@ const Page: FC = (): ReactElement => {
     </UserProvider>
   )
 }
-
 export default Page
