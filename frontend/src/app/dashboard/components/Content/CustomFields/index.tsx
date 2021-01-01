@@ -7,7 +7,8 @@ import {
   bytesToSize,
   getFileInfo,
   getImageData,
-  getRandomCode
+  getRandomCode,
+  getReferenceTitle
 } from 'fogg-utils'
 
 // Configuration
@@ -116,18 +117,14 @@ const CustomFields: FC<iProps> = ({
       return (
         <div className={styles.entries}>
           {currentEntries &&
-            currentEntries.map((entry: any) => {
-              const title: any = Object.entries(entry)[0][1]
-
-              return (
-                <EntryBlock
-                  key={entry.id}
-                  modelName={entry.modelName}
-                  title={title}
-                  status={entry.status}
-                />
-              )
-            })}
+            currentEntries.map((entry: any) => (
+              <EntryBlock
+                key={entry.id}
+                modelName={entry.modelName}
+                title={getReferenceTitle(entry)}
+                status={entry.status}
+              />
+            ))}
 
           <a
             className={styles.reference}

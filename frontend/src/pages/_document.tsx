@@ -1,6 +1,6 @@
 // Dependencies
 import React, { ReactElement } from 'react'
-import Document, { Head, Main, NextScript } from 'next/document'
+import Document, { Head, Main, NextScript, Html } from 'next/document'
 
 export default class MyDocument extends Document {
   render(): ReactElement {
@@ -8,7 +8,7 @@ export default class MyDocument extends Document {
       'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'
 
     return (
-      <html lang="es">
+      <Html lang="en">
         <Head>
           <link
             rel="stylesheet"
@@ -22,7 +22,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }

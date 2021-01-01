@@ -1,6 +1,7 @@
 // Dependencies
 import React, { FC, ReactElement, memo } from 'react'
 import { Modal, EntryBlock } from 'fogg-ui'
+import { getReferenceTitle } from 'fogg-utils'
 
 // Styles
 import styles from './Modal.scss'
@@ -31,7 +32,6 @@ const ReferenceModal: FC<iProps> = ({
     <Modal isOpen={isOpen} label={label} options={options} onClose={onClose}>
       <div className={styles.modal}>
         {referenceEntries.entries.map((entry: any) => {
-          const title: any = Object.entries(entry)[0][1]
           entry.modelName = referenceEntries.modelName
 
           return (
@@ -39,7 +39,7 @@ const ReferenceModal: FC<iProps> = ({
               key={entry.id}
               onClick={() => setCurrentEntry(entry)}
               modelName={referenceEntries.modelName}
-              title={title}
+              title={getReferenceTitle(entry)}
               status={entry.status}
             />
           )
