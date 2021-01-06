@@ -1,6 +1,8 @@
 import React from 'react'
 import { ApolloProvider } from '@apollo/client'
 import { useApollo } from '@lib/apolloClient'
+import { ThemeProvider } from '@styled-components'
+import { theme, GlobalStyle } from '@styles/theme'
 
 export default function App({
   Component,
@@ -12,8 +14,14 @@ export default function App({
   const apolloClient = useApollo(pageProps.initialApolloState)
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <Component {...pageProps} />
-    </ApolloProvider>
+    <>
+      <GlobalStyle />
+
+      <ApolloProvider client={apolloClient}>
+        <ThemeProvider>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </ApolloProvider>
+    </>
   )
 }

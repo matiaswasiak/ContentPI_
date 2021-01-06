@@ -1,14 +1,9 @@
 // Dependencies
-import withSass from '@zeit/next-sass'
 import path from 'path'
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin'
 import Dotenv from 'dotenv-webpack'
 
-export default withSass({
-  cssModules: true,
-  cssLoaderOptions: {
-    localIdentName: '[name]__[local]__[hash:base64:5]'
-  },
+export default {
   devIndicators: {
     autoPrerender: false
   },
@@ -47,6 +42,7 @@ export default withSass({
       dir,
       './src/shared/components/ui'
     )
+    config.resolve.alias['@styles'] = path.resolve(dir, './src/shared/styles')
     config.resolve.alias['@shared'] = path.resolve(dir, './src/shared')
     config.resolve.alias.styles = path.resolve(dir, './src/shared/styles')
 
@@ -62,4 +58,4 @@ export default withSass({
 
     return config
   }
-})
+}
